@@ -10,33 +10,11 @@ class App extends Component {
     hasSearched: false
   }
 
-  _setFakeDataInState = () => {
-    this.setState({
-      results: [
-        {
-            "name": "ARKAD Fair",
-            "time": "10:00:00",
-            "date": "2017-11-15T00:00:00.000Z",
-            "info": "Arbetsmässa på LTH som är grym",
-            "id": 1
-        },
-        {
-            "name": "Title",
-            "time": "12:00:00",
-            "date": "2017-11-12T00:00:00.000Z",
-            "info": "This is a Title",
-            "id": 10
-        }
-      ],
-      hasSearched: true
-    })
-  }
-
   _queryBackend = () => {
-    // fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
-    // .then(res => res.json)
-    // .then(res => console.log(res))
-    setTimeout(this._setFakeDataInState, 500)
+    fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
+    .then(res => res.json())
+    .then(res => this.setState({results: res, hasSearched: true}))
+    .catch(err => console.error(err))
   }
 
   _renderInputField = () => {
