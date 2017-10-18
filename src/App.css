@@ -4,15 +4,21 @@ body {
   font: 14px/1.7 "Source Sans Pro", sans-serif;
 }
 
+/**
+* Om du sätter overflow: hidden på mount-div blir animationerna konstiga
+*/
+
 .ArkadSearch_Container {
+  height: 100%;
+  width: 100%;
 }
 
 .ArkadSearch_InputField {
   text-align: center;
+  margin-bottom: 30px;
 }
 
 .ArkadSearch_Result {
-  /* border: 1px solid black; */
   margin: 20px 0px;
   padding: 10px 10px;
 }
@@ -31,4 +37,9 @@ body {
 .ArkadSearch_ResultTime {
   font-size: 15px;
   font-style: italic;
+}
+
+.ArkadSearch_NoResultsText {
+  text-align: center;
+  font-size: 20px;
 }

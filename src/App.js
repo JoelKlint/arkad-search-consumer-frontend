@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import FlipMove from 'react-flip-move'
 import './App.css';
 
 class App extends Component {
 
   state = {
-    query: 'QUERY',
-    results: []
-  }
-
-  componentDidMount() {
-    // this._setFakeDataInState()
+    query: '',
+    results: [],
+    hasSearched: false
   }
 
   _setFakeDataInState = () => {
@@ -30,7 +27,8 @@ class App extends Component {
             "info": "This is a Title",
             "id": 10
         }
-      ]
+      ],
+      hasSearched: true
     })
   }
 
@@ -38,7 +36,45 @@ class App extends Component {
     // fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
     // .then(res => res.json)
     // .then(res => console.log(res))
-    setTimeout(this._setFakeDataInState, 1000)
+    setTimeout(this._setFakeDataInState, 500)
+
+    const newRes = [
+      {
+          "name": "Bajs",
+          "time": "12:00:00",
+          "date": "2017-11-12T00:00:00.000Z",
+          "info": "This is a Title",
+          "id": 11
+      },
+      {
+          "name": "Title",
+          "time": "12:00:00",
+          "date": "2017-11-12T00:00:00.000Z",
+          "info": "This is a Title",
+          "id": 10
+      },
+      {
+          "name": "ARKAD Fair",
+          "time": "10:00:00",
+          "date": "2017-11-15T00:00:00.000Z",
+          "info": "Arbetsmässa på LTH som är grym",
+          "id": 1
+      },
+    ]
+    setTimeout(() => this.setState({results: newRes}), 2000)
+
+    const newNewRes = [
+      {
+          "name": "ARKAD Fair",
+          "time": "10:00:00",
+          "date": "2017-11-15T00:00:00.000Z",
+          "info": "Arbetsmässa på LTH som är grym",
+          "id": 1
+      }
+    ]
+    setTimeout(() => this.setState({results: newNewRes}), 3500)
+
+    setTimeout(() => this.setState({results: []}), 5000)
   }
 
   _renderInputField = () => {
@@ -48,7 +84,9 @@ class App extends Component {
           type="text"
           placeholder='Search...'
           value={this.state.query}
+          autoFocus
           onChange={event => this.setState({query: event.target.value})}
+          onKeyPress={(e) => e.which === 13 ? this._queryBackend() : null}
         />
         <button onClick={this._queryBackend}>Search</button>
       </div>
@@ -67,13 +105,43 @@ class App extends Component {
     )
   }
 
+  _renderNoResultsEntry = () => {
+    const {hasSearched} = this.state
+    if(hasSearched) {
+      return (
+        <div className="ArkadSearch_NoResultsText" key='NO-HITS'>
+          No results found, try something else
+        </div>
+      )
+    }
+    else {
+      return (
+        <div className="ArkadSearch_NoResultsText" key='FIRST-SEARCH'>
+          Please enter a search query
+        </div>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="ArkadSearch_Container">
 
         {this._renderInputField()}
 
-        {this.state.results.map(result => this._renderSearchResult(result))}
+        <FlipMove 
+          duration={500} 
+          easing="ease-in-out"
+          enterAnimation="elevator"
+          leaveAnimation="elevator"
+        >
+          {
+            this.state.results.length > 0
+            ? this.state.results.map(result => this._renderSearchResult(result))
+            : this._renderNoResultsEntry()
+          }
+        </FlipMove>
+
 
       </div>
     );
