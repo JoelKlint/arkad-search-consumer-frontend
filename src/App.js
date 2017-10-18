@@ -37,44 +37,6 @@ class App extends Component {
     // .then(res => res.json)
     // .then(res => console.log(res))
     setTimeout(this._setFakeDataInState, 500)
-
-    const newRes = [
-      {
-          "name": "Bajs",
-          "time": "12:00:00",
-          "date": "2017-11-12T00:00:00.000Z",
-          "info": "This is a Title",
-          "id": 11
-      },
-      {
-          "name": "Title",
-          "time": "12:00:00",
-          "date": "2017-11-12T00:00:00.000Z",
-          "info": "This is a Title",
-          "id": 10
-      },
-      {
-          "name": "ARKAD Fair",
-          "time": "10:00:00",
-          "date": "2017-11-15T00:00:00.000Z",
-          "info": "Arbetsmässa på LTH som är grym",
-          "id": 1
-      },
-    ]
-    setTimeout(() => this.setState({results: newRes}), 2000)
-
-    const newNewRes = [
-      {
-          "name": "ARKAD Fair",
-          "time": "10:00:00",
-          "date": "2017-11-15T00:00:00.000Z",
-          "info": "Arbetsmässa på LTH som är grym",
-          "id": 1
-      }
-    ]
-    setTimeout(() => this.setState({results: newNewRes}), 3500)
-
-    setTimeout(() => this.setState({results: []}), 5000)
   }
 
   _renderInputField = () => {

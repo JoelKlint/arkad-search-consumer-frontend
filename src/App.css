@@ -1,8 +1,8 @@
-/* Remove this */
-body {
+/* Only used in dev */
+/* body {
   margin: 0;
   font: 14px/1.7 "Source Sans Pro", sans-serif;
-}
+} */
 
 /**
 * Om du sätter overflow: hidden på mount-div blir animationerna konstiga
