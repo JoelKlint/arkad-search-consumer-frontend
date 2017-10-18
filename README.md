@@ -7,7 +7,7 @@
 npm install && npm run build
 ```
 
-2. Upload build products to a static address
+2. Upload build/static folder to a static address
 
 3. Load frontend in desired website
 
