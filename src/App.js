@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import FlipMove from 'react-flip-move'
 import './App.css';
 
+
+
 class App extends Component {
 
   state = {
@@ -11,11 +13,13 @@ class App extends Component {
   }
 
   _queryBackend = () => {
+
     if(this.state.query === '') {
       this.setState({results: [], hasSearched: true})
     }
     else {
-      fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
+      const ApiUrl = 'https://arkad-search.herokuapp.com'
+      fetch(`${ApiUrl}/arkad-search/${this.state.query}`)
       .then(res => res.json())
       .then(res => this.setState({results: res, hasSearched: true}))
       .catch(err => console.error(err))
