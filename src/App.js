@@ -93,7 +93,7 @@ class App extends Component {
     return this.state.results.map(result => ({
       key: String(result.id),
       style: {
-        height: spring(100), 
+        height: spring(125), 
         marginTop: spring(20),
         marginBottom: spring(20)
       },
