@@ -14,29 +14,61 @@
 }
 
 .ArkadSearch_InputField {
+  display: flex;
   text-align: center;
   margin-bottom: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.ArkadSearch_InputField input {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.ArkadSearch_InputField button {
+  flex-grow: 0;
 }
 
 .ArkadSearch_Result {
+  display: flex;
+  flex-direction: column;
   margin: 20px 0px;
   padding: 10px 10px;
+  border: 1px solid black;
+  height: 100px;
 }
 
 .ArkadSearch_ResultHeader {
-  border-bottom: 1px solid black;
   display: flex;
-  align-items: baseline;
+  height: 40%;
   justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid black;
+  margin-bottom: 10px;
 }
 
 .ArkadSearch_ResultTitle {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 30px;
 }
 
 .ArkadSearch_ResultTime {
+  flex-grow: 0;
+  margin-left: 10px;
   font-size: 15px;
   font-style: italic;
+}
+
+.ArkadSearch_ResultInfo {
+  flex-grow: 0;
+  height: 60%;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .ArkadSearch_NoResultsText {

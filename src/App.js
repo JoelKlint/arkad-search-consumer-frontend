@@ -11,10 +11,15 @@ class App extends Component {
   }
 
   _queryBackend = () => {
-    fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
-    .then(res => res.json())
-    .then(res => this.setState({results: res, hasSearched: true}))
-    .catch(err => console.error(err))
+    if(this.state.query === '') {
+      this.setState({results: [], hasSearched: true})
+    }
+    else {
+      fetch(`http://search.arkadtlth.se/arkad-search/${this.state.query}`)
+      .then(res => res.json())
+      .then(res => this.setState({results: res, hasSearched: true}))
+      .catch(err => console.error(err))
+    }
   }
 
   _renderInputField = () => {
@@ -40,7 +45,7 @@ class App extends Component {
           <div className='ArkadSearch_ResultTitle'>{result.name}</div>
           <div className='ArkadSearch_ResultTime'>{result.time}</div>
         </div>
-        <div>{result.info}</div>
+        <div className='ArkadSearch_ResultInfo'>{result.info}</div>
       </div>
     )
   }
