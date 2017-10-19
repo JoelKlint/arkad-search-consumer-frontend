@@ -1,27 +1,49 @@
 import React, { Component } from 'react';
-import FlipMove from 'react-flip-move'
+import { TransitionMotion, spring } from 'react-motion'
+import moment from 'moment'
 import './App.css';
 
+const MESSAGE = 'I AM A MESSAGE'
+const NO_HITS = 'No results found, try something else'
+const INIT_PROMPT = 'Please enter a search query'
 
+const RandomString = () => {
+  let text = "";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 
 class App extends Component {
 
   state = {
     query: '',
-    results: [],
-    hasSearched: false
+    results: [{"id": RandomString(), "type": MESSAGE, "message": INIT_PROMPT}]
   }
 
   _queryBackend = () => {
-
     if(this.state.query === '') {
-      this.setState({results: [], hasSearched: true})
+      this.setState({
+        results: [{"id": RandomString(), "type": MESSAGE, "message": NO_HITS}]
+      })
     }
     else {
       const ApiUrl = 'https://arkad-search.herokuapp.com'
       fetch(`${ApiUrl}/arkad-search/${this.state.query}`)
       .then(res => res.json())
-      .then(res => this.setState({results: res, hasSearched: true}))
+      .then(res => {
+        if(res.length === 0) {
+          this.setState({
+            results: [{"id": RandomString(), "type": MESSAGE, "message": NO_HITS}]
+          })
+        }
+        else {
+          this.setState({results: res})
+        }
+      })
       .catch(err => console.error(err))
     }
   }
@@ -42,33 +64,67 @@ class App extends Component {
     )
   }
 
-  _renderSearchResult = (result) => {
+  _renderSearchResult = (config) => {
+    const {data, style} = config
     return (
-      <div className='ArkadSearch_Result' key={result.id}>
+      <div style={style} className='ArkadSearch_Result' key={data.id}>
         <div className='ArkadSearch_ResultHeader'>
-          <div className='ArkadSearch_ResultTitle'>{result.name}</div>
-          <div className='ArkadSearch_ResultTime'>{result.time}</div>
+          <div className='ArkadSearch_ResultTitle'>{data.name}</div>
+          <div className='ArkadSearch_ResultTime'>
+            {moment(data.date).format('D MMM')}<br/>
+            {data.time.substring(0,5) !== '00:00' ? data.time.substring(0,5) : ''}
+          </div>
         </div>
-        <div className='ArkadSearch_ResultInfo'>{result.info}</div>
+        <div className='ArkadSearch_ResultInfo'>{data.info}</div>
       </div>
     )
   }
 
-  _renderNoResultsEntry = () => {
-    const {hasSearched} = this.state
-    if(hasSearched) {
-      return (
-        <div className="ArkadSearch_NoResultsText" key='NO-HITS'>
-          No results found, try something else
-        </div>
-      )
+  _renderNoResultsEntry = (config) => {
+    const {style, key, data} = config
+    return (
+      <div style={style} className="ArkadSearch_Message" key={key}>
+        {data.message}
+      </div>
+    )
+  }
+
+  _getStyles = () => {
+    return this.state.results.map(result => ({
+      key: String(result.id),
+      style: {
+        height: spring(100), 
+        marginTop: spring(20),
+        marginBottom: spring(20)
+      },
+      data: result,
+    }))
+  }
+
+  _getDefaultStyles = () => {
+    return this.state.results.map(result => ({
+      key: String(result.id),
+      style: {
+        height: 0, 
+        marginTop: 0,
+        marginBottom: 0
+      }
+    }))
+  }
+
+  _willLeave = () => {
+    return {
+      height: spring(0), 
+      marginTop: spring(0),
+      marginBottom: spring(0)
     }
-    else {
-      return (
-        <div className="ArkadSearch_NoResultsText" key='FIRST-SEARCH'>
-          Please enter a search query
-        </div>
-      )
+  }
+
+  _willEnter = () => {
+    return {
+      height: 0, 
+      marginTop: 0,
+      marginBottom: 0
     }
   }
 
@@ -78,19 +134,23 @@ class App extends Component {
 
         {this._renderInputField()}
 
-        <FlipMove 
-          duration={500} 
-          easing="ease-in-out"
-          enterAnimation="elevator"
-          leaveAnimation="elevator"
+        <TransitionMotion
+          styles={this._getStyles()}
+          defaultStyles={this._getDefaultStyles()}   
+          willLeave={this._willLeave}
+          willEnter={this._willEnter}
         >
-          {
-            this.state.results.length > 0
-            ? this.state.results.map(result => this._renderSearchResult(result))
-            : this._renderNoResultsEntry()
+          {styles => 
+            <div>
+              {styles.map(config => (
+                config.data.type === MESSAGE
+                ? this._renderNoResultsEntry(config)
+                : this._renderSearchResult(config))
+              )
+              }
+            </div>
           }
-        </FlipMove>
-
+        </TransitionMotion>
 
       </div>
     );
