@@ -66,13 +66,20 @@ class App extends Component {
 
   _renderSearchResult = (config) => {
     const {data, style} = config
+
+    const shouldRenderDate = () => moment(data.date).year() === moment().year()
+    const shouldRenderTime = () => shouldRenderDate() && data.time.substring(0,5) !== '00:00'
+
+    const renderTime = () => data.time.substring(0,5)
+    const renderDate = () => moment(data.date).format('D MMM')
+
     return (
       <div style={style} className='ArkadSearch_Result' key={data.id}>
         <div className='ArkadSearch_ResultHeader'>
           <div className='ArkadSearch_ResultTitle'>{data.name}</div>
           <div className='ArkadSearch_ResultTime'>
-            {moment(data.date).format('D MMM')}<br/>
-            {data.time.substring(0,5) !== '00:00' ? data.time.substring(0,5) : ''}
+            {shouldRenderDate() ? renderDate() : ''}<br/>
+            {shouldRenderTime() ? renderTime() : ''}
           </div>
         </div>
         <div className='ArkadSearch_ResultInfo'>{data.info}</div>
