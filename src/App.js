@@ -5,7 +5,7 @@ import './App.css';
 
 const MESSAGE = 'I AM A MESSAGE'
 const NO_HITS = 'No results found, try something else'
-const INIT_PROMPT = 'Please enter a search query'
+const INIT_PROMPT = 'Welcome to Arkad Search! What are you looking for?'
 
 const RandomString = () => {
   let text = "";
@@ -27,7 +27,7 @@ class App extends Component {
   _queryBackend = () => {
     if(this.state.query === '') {
       this.setState({
-        results: [{"id": RandomString(), "type": MESSAGE, "message": NO_HITS}]
+        results: [{"id": RandomString(), "type": MESSAGE, "message": INIT_PROMPT}]
       })
     }
     else {
@@ -80,7 +80,7 @@ class App extends Component {
     )
   }
 
-  _renderNoResultsEntry = (config) => {
+  _renderMessageEntry = (config) => {
     const {style, key, data} = config
     return (
       <div style={style} className="ArkadSearch_Message" key={key}>
@@ -144,7 +144,7 @@ class App extends Component {
             <div>
               {styles.map(config => (
                 config.data.type === MESSAGE
-                ? this._renderNoResultsEntry(config)
+                ? this._renderMessageEntry(config)
                 : this._renderSearchResult(config))
               )
               }
