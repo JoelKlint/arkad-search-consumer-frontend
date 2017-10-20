@@ -7,13 +7,17 @@ import './App.css';
 
 const MESSAGE = 'I AM A MESSAGE'
 
+let queryStart = undefined
+
 const DefaultMessages = {
-  NoHits: 'No results found, try something else',
-  NoQuery: 'Welcome to Arkad Search! What are you looking for?'
+  NoHitsText: 'No results found, try something else',
+  NoQueryText: 'Welcome to Arkad Search! What are you looking for?',
+  SearchingText: 'searching...'
 }
 const Messages = {
-  NoHits: document.currentScript.getAttribute('NoHitsPrompt') || DefaultMessages.NoHits,
-  NoQuery: document.currentScript.getAttribute('NoQueryPrompt') || DefaultMessages.NoQuery
+  NoHitsText: document.currentScript.getAttribute('NoHitsText') || DefaultMessages.NoHitsText,
+  NoQueryText: document.currentScript.getAttribute('NoQueryText') || DefaultMessages.NoQueryText,
+  SearchingText: document.currentScript.getAttribute('SearchingText') || DefaultMessages.SearchingText
 }
 
 const RandomString = () => {
@@ -30,31 +34,43 @@ class App extends Component {
 
   state = {
     query: '',
-    results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}],
+    results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQueryText}],
     modal: null
   }
 
   _queryBackend = () => {
+    queryStart = Number(moment().format('x'))
+    const ApiUrl = 'https://arkad-search.herokuapp.com'
+    fetch(`${ApiUrl}/arkad-search/${this.state.query}`)
+    .then(res => res.json())
+    .then(res => {
+      if(res.length === 0) {
+        this.setState({
+          results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoHitsText}]
+        })
+      }
+      else {
+        const timeSpentSearching = Number(moment().format('x')) - queryStart
+        setTimeout(
+          () => this.setState({results: res}), 
+          600 - timeSpentSearching
+        )
+      }
+    })
+    .catch(err => console.error(err))
+  }
+
+  _search = () => {
     if(this.state.query === '') {
       this.setState({
-        results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}]
+        results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQueryText}]
       })
     }
     else {
-      const ApiUrl = 'https://arkad-search.herokuapp.com'
-      fetch(`${ApiUrl}/arkad-search/${this.state.query}`)
-      .then(res => res.json())
-      .then(res => {
-        if(res.length === 0) {
-          this.setState({
-            results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoHits}]
-          })
-        }
-        else {
-          this.setState({results: res})
-        }
+      this.setState({
+        results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.SearchingText}]
       })
-      .catch(err => console.error(err))
+      setTimeout(this._queryBackend, 600)
     }
   }
 
@@ -67,9 +83,9 @@ class App extends Component {
           value={this.state.query}
           autoFocus
           onChange={event => this.setState({query: event.target.value})}
-          onKeyPress={(e) => e.which === 13 ? this._queryBackend() : null}
+          onKeyPress={(e) => e.which === 13 ? this._search() : null}
         />
-        <button onClick={this._queryBackend}>Search</button>
+        <button onClick={this._search}>Search</button>
       </div>
     )
   }
@@ -125,7 +141,7 @@ class App extends Component {
       key: String(result.id),
       style: {
         height: spring(125, presets.wobbly), 
-        marginBottom: spring(20),
+        marginBottom: spring(20, presets.wobbly),
       },
       data: result,
     }))
@@ -143,8 +159,8 @@ class App extends Component {
 
   _willLeave = () => {
     return {
-      height: spring(0), 
-      marginBottom: spring(0),
+      height: spring(0, presets.noWobble), 
+      marginBottom: spring(0, presets.noWobble),
     }
   }
 

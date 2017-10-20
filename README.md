@@ -21,8 +21,9 @@ Place this in the bottom of html body
 <script 
     src="PLACE_URL_TO_JS_HERE" 
     mountNode="<id-of-dom-node-to-mount-on>"
-    NoHitsPrompt="<text-to-show-when-no-hits-are-found>" 
-    NoQueryPrompt="<text-to-show-when-no-query>"
+    NoHitsText="<text-to-show-when-no-hits-are-found>" 
+    NoQueryText="<text-to-show-when-no-query>"
+    SearchingText="<text-to-show-when-searching>"
 />
 ```
 ## Default values
