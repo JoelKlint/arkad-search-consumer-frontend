@@ -38,6 +38,7 @@
   margin-right: 10px;
   margin-left: 10px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .ArkadSearch_ResultHeader {

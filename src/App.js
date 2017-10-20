@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { TransitionMotion, spring } from 'react-motion'
+import { TransitionMotion, spring, presets } from 'react-motion'
+import SweetAlert from 'sweetalert-react';
+import 'sweetalert/dist/sweetalert.css';
 import moment from 'moment'
 import './App.css';
 
@@ -28,7 +30,8 @@ class App extends Component {
 
   state = {
     query: '',
-    results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}]
+    results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}],
+    modal: null
   }
 
   _queryBackend = () => {
@@ -81,7 +84,12 @@ class App extends Component {
     const renderDate = () => moment(data.date).format('D MMM')
 
     return (
-      <div style={style} className='ArkadSearch_Result' key={data.id}>
+      <div 
+        onClick={() => this.setState({modal: data.id})}
+        style={style} 
+        className='ArkadSearch_Result' 
+        key={data.id}
+      >
         <div className='ArkadSearch_ResultHeader'>
           <div className='ArkadSearch_ResultTitle'>{data.name}</div>
           <div className='ArkadSearch_ResultTime'>
@@ -90,6 +98,15 @@ class App extends Component {
           </div>
         </div>
         <div className='ArkadSearch_ResultInfo'>{data.info}</div>
+        <SweetAlert
+          show={this.state.modal === data.id}
+          animation='slide-from-bottom'
+          title={data.name}
+          text={data.info}
+          onEscapeKey={() => this.setState({modal: null})}
+          onOutsideClick={() => this.setState({modal: null})}
+          onConfirm={() => this.setState({modal: null})}
+        />
       </div>
     )
   }
@@ -107,9 +124,8 @@ class App extends Component {
     return this.state.results.map(result => ({
       key: String(result.id),
       style: {
-        height: spring(125), 
-        marginTop: spring(20),
-        marginBottom: spring(20)
+        height: spring(125, presets.wobbly), 
+        marginBottom: spring(20),
       },
       data: result,
     }))
@@ -120,8 +136,7 @@ class App extends Component {
       key: String(result.id),
       style: {
         height: 0, 
-        marginTop: 0,
-        marginBottom: 0
+        marginBottom: 0,
       }
     }))
   }
@@ -129,16 +144,14 @@ class App extends Component {
   _willLeave = () => {
     return {
       height: spring(0), 
-      marginTop: spring(0),
-      marginBottom: spring(0)
+      marginBottom: spring(0),
     }
   }
 
   _willEnter = () => {
     return {
       height: 0, 
-      marginTop: 0,
-      marginBottom: 0
+      marginBottom: 0,
     }
   }
 
