@@ -12,7 +12,7 @@ let queryStart = undefined
 const DefaultMessages = {
   NoHitsText: 'No results found, try something else',
   NoQueryText: 'Welcome to Arkad Search! What are you looking for?',
-  SearchingText: 'searching...'
+  SearchingText: 'Searching...'
 }
 const Messages = {
   NoHitsText: document.currentScript.getAttribute('NoHitsText') || DefaultMessages.NoHitsText,
@@ -136,12 +136,35 @@ class App extends Component {
     )
   }
 
+  _getSortedArray = (array) => {
+    return array.sort((a, b) => {
+      if(a.data.type === MESSAGE && b.data.type === MESSAGE) {
+        if(a.data.message === Messages.SearchingText) {
+          return 1
+        }
+        else if(b.data.message === Messages.SearchingText) {
+          return -1
+        }
+        else {
+          return 0
+        }
+      }
+      else if(a.data.type === MESSAGE) {
+        return 1
+      }
+      else {
+        return -1
+      }
+    })
+  }
+
   _getStyles = () => {
     return this.state.results.map(result => ({
       key: String(result.id),
       style: {
         height: spring(125, presets.wobbly), 
-        marginBottom: spring(20, presets.wobbly),
+        marginTop: spring(10, presets.wobbly),
+        marginBottom: spring(10, presets.wobbly),
       },
       data: result,
     }))
@@ -152,6 +175,7 @@ class App extends Component {
       key: String(result.id),
       style: {
         height: 0, 
+        marginTop: 0,
         marginBottom: 0,
       }
     }))
@@ -160,6 +184,7 @@ class App extends Component {
   _willLeave = () => {
     return {
       height: spring(0, presets.noWobble), 
+      marginTop: spring(0, presets.noWobble), 
       marginBottom: spring(0, presets.noWobble),
     }
   }
@@ -167,6 +192,7 @@ class App extends Component {
   _willEnter = () => {
     return {
       height: 0, 
+      marginTop: 0,
       marginBottom: 0,
     }
   }
@@ -185,7 +211,7 @@ class App extends Component {
         >
           {styles => 
             <div>
-              {styles.map(config => (
+              {this._getSortedArray(styles).map(config => (
                 config.data.type === MESSAGE
                 ? this._renderMessageEntry(config)
                 : this._renderSearchResult(config))

@@ -28,5 +28,6 @@ Place this in the bottom of html body
 ```
 ## Default values
 mountNode: `arkad-search-consumer-frontend` \
-NoHitsPrompt: `No results found, try something else` \
-NoQueryPrompt: `Welcome to Arkad Search! What are you looking for?` \
+NoHitsText: `No results found, try something else` \
+NoQueryText: `Welcome to Arkad Search! What are you looking for?` \
+SearchingText: `Searching...` 
