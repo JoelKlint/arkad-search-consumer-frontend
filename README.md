@@ -18,7 +18,14 @@ Place this in html head
 
 Place this in the bottom of html body
 ```html
-<script src="PLACE_URL_TO_JS_HERE" mountNode="<id-of-dom-node-to-mount-on>" />
+<script 
+    src="PLACE_URL_TO_JS_HERE" 
+    mountNode="<id-of-dom-node-to-mount-on>"
+    NoHitsPrompt="<text-to-show-when-no-hits-are-found>" 
+    NoQueryPrompt="<text-to-show-when-no-query>"
+/>
 ```
-
-mountNode defaults to `arkad-search-consumer-frontend`
+## Default values
+mountNode: `arkad-search-consumer-frontend` \
+NoHitsPrompt: `No results found, try something else` \
+NoQueryPrompt: `Welcome to Arkad Search! What are you looking for?` \

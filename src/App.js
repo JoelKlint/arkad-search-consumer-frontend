@@ -4,8 +4,15 @@ import moment from 'moment'
 import './App.css';
 
 const MESSAGE = 'I AM A MESSAGE'
-const NO_HITS = 'No results found, try something else'
-const INIT_PROMPT = 'Welcome to Arkad Search! What are you looking for?'
+
+const DefaultMessages = {
+  NoHits: 'No results found, try something else',
+  NoQuery: 'Welcome to Arkad Search! What are you looking for?'
+}
+const Messages = {
+  NoHits: document.currentScript.getAttribute('NoHitsPrompt') || DefaultMessages.NoHits,
+  NoQuery: document.currentScript.getAttribute('NoQueryPrompt') || DefaultMessages.NoQuery
+}
 
 const RandomString = () => {
   let text = "";
@@ -21,13 +28,13 @@ class App extends Component {
 
   state = {
     query: '',
-    results: [{"id": RandomString(), "type": MESSAGE, "message": INIT_PROMPT}]
+    results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}]
   }
 
   _queryBackend = () => {
     if(this.state.query === '') {
       this.setState({
-        results: [{"id": RandomString(), "type": MESSAGE, "message": INIT_PROMPT}]
+        results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoQuery}]
       })
     }
     else {
@@ -37,7 +44,7 @@ class App extends Component {
       .then(res => {
         if(res.length === 0) {
           this.setState({
-            results: [{"id": RandomString(), "type": MESSAGE, "message": NO_HITS}]
+            results: [{"id": RandomString(), "type": MESSAGE, "message": Messages.NoHits}]
           })
         }
         else {
