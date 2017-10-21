@@ -1,5 +1,10 @@
 # Front end for consuming Arkad-Search data
 
+## Run project locally
+```js
+npm install && npm start
+```
+
 ## How to mount
 
 1. Build static assets
@@ -30,4 +35,4 @@ Place this in the bottom of html body
 mountNode: `arkad-search-consumer-frontend` \
 NoHitsText: `No results found, try something else` \
 NoQueryText: `Welcome to Arkad Search! What are you looking for?` \
-SearchingText: `Searching...` 
+SearchingText: `Searching...`
