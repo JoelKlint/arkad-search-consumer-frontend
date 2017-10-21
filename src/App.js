@@ -138,6 +138,7 @@ class App extends Component {
 
   _getSortedArray = (array) => {
     return array.sort((a, b) => {
+      // Both are messages
       if(a.data.type === MESSAGE && b.data.type === MESSAGE) {
         if(a.data.message === Messages.SearchingText) {
           return 1
@@ -149,11 +150,17 @@ class App extends Component {
           return 0
         }
       }
+      // Only a is message
       else if(a.data.type === MESSAGE) {
         return 1
       }
-      else {
+      // Only b is message
+      else if(b.data.type === MESSAGE) {
         return -1
+      }
+      // None is message
+      else {
+        return 0
       }
     })
   }
