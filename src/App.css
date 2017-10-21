@@ -8,6 +8,17 @@
 * Om du sätter overflow: hidden på mount-div blir animationerna konstiga
 */
 
+@media (max-width: 600px) {
+  .ArkadSearch_InputField {
+    flex-direction: column;
+    align-items: center;
+  }
+  .ArkadSearch_InputField input {
+    margin: 0 0 20px 0 !important;
+    width: 100%;
+  }
+}
+
 .ArkadSearch_Container {
   height: 100%;
   width: 100%;
@@ -76,4 +87,19 @@
   text-align: center;
   font-size: 20px;
   overflow: hidden;
+}
+
+.sweet-alert {
+  box-sizing : border-box !important;
+  max-height : 100% !important;
+  overflow-y : auto !important;
+  padding : 0 17px 17px !important;
+  max-width : 100% !important;
+}
+
+.sweet-alert:before {
+  content : "" !important;
+  display : block !important;
+  height : 17px !important;
+  width : 0 !important;
 }
